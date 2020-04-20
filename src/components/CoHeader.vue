@@ -1,6 +1,8 @@
 <template>
   <div class="co-header">
-    <h1>CHALENGE FOLHA DIRIGIDA</h1>
+    <router-link :to="{ name: 'Article' }">
+      <h1>CHALENGE FOLHA DIRIGIDA</h1>
+    </router-link>
     <div class="card-container">
       <i class="el-icon-s-goods card-icon"></i>
       <card />

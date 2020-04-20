@@ -1,18 +1,16 @@
 <template>
   <div id="app">
     <co-header />
-    <Article />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Article from "./components/Article.vue";
 import CoHeader from "./components/CoHeader.vue";
 
 export default {
   name: "App",
   components: {
-    Article,
     CoHeader
   }
 };

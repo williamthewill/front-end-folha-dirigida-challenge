@@ -1,35 +1,63 @@
 <template>
   <div class="article">
     <el-row>
-      <el-col :span="8" v-for="(o) in 9" :key="o" :offset="2">
-        <el-card>
-          <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-            class="image"
-          />
-          <div style="padding: 14px;">
-            <span>Yummy hamburger</span>
-            <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
-              <el-button type="text" class="button">Operating</el-button>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
+      <div v-for="(book, index) in books" :key="book.id" :book-index="index">
+        <router-link :to="getRoute(book)" class="dropdown-item">
+          <el-col :span="8" :offset="2">
+            <el-card>
+              <img :src="getImgUrl(book.image)" class="image" />
+              <div style="padding: 14px;">
+                <span>{{book.name}}</span>
+                <br />
+                <span>
+                  <strong>Preço: {{getPrice(book.price)}}</strong>
+                </span>
+              </div>
+            </el-card>
+          </el-col>
+        </router-link>
+      </div>
     </el-row>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Article",
-  props: {
-    msg: String
-  },
+  props: {},
   data() {
     return {
-      currentDate: new Date()
+      currentDate: new Date(),
+      books: []
     };
+  },
+  methods: {
+    getRoute(book) {
+      return {
+        path: `book/${book.id}`,
+        params: { id: book.id }
+      };
+    },
+    getImgUrl(image) {
+      return image;
+    },
+    getPrice(price) {
+      let pFormated = price.toString().replace(".", ",");
+      pFormated = pFormated.indexOf(",") === -1 ? `${pFormated},00` : pFormated;
+      return `R$ ${pFormated}`;
+    }
+  },
+  beforeMount() {
+    axios
+      .get("http://localhost:4000/books")
+      .then(resp => {
+        this.books = resp.data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
@@ -38,25 +66,30 @@ export default {
 <style scoped>
 .article .el-col-8 {
   max-width: 16%;
+  margin-bottom: 10px;
 }
-.time {
+article .time {
   font-size: 13px;
   color: #999;
 }
 
-.bottom {
+article .bottom {
   margin-top: 13px;
   line-height: 12px;
 }
 
-.button {
+article .button {
   padding: 0;
   float: right;
 }
 
+.el-card {
+  height: 500px;
+}
+
 .image {
-  width: 100%;
-  display: block;
+  max-height: 350px;
+  max-width: 100%;
 }
 
 .clearfix:before,
