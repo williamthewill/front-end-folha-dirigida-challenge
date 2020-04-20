@@ -1,5 +1,7 @@
 # front_folha_dirigida
 
+Before Start Front-End It's necessary start the API
+
 ## Project setup
 ```
 yarn install
