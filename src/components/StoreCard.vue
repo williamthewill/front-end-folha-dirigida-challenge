@@ -1,20 +1,17 @@
 <template>
-  <div class="card">
+  <div class="card" v-if="renderComponent">
     <el-card class="box-card">
       <div class="items">
-        <div v-for="o in 4" :key="o" class="item">
-          <img
-            class="book-img"
-            src="https://assets.wizardingworld.com/frontend/_next/static/images/rectangle-2-312-d69c5cce3cdf1a37a03b312c38335ad1.png"
-          />
+        <div v-for="(item, index) in card" :key="index" class="item">
+          <img class="book-img" :src="getImgUrl(item.image)" />
           <div class="item-container">
             <ul>
-              <li>{{`Livro ${o}` }}</li>
-              <li>{{`Preço: R$ ${o}` }}</li>
+              <li>{{`Livro ${item.name}` }}</li>
+              <li>{{`Preço: R$ ${item.price}` }}</li>
               <li></li>
             </ul>
             <div class="remove-item" title="Remover item do carrinho">
-              <i class="el-icon-delete-solid"></i>
+              <i class="el-icon-delete-solid" v-on:click.prevent.stop="removeItem(item.id)"></i>
             </div>
           </div>
         </div>
@@ -27,8 +24,68 @@
 <script>
 export default {
   name: "Card",
+  data() {
+    return {
+      card: {},
+      renderComponent: true
+    };
+  },
   props: {
-    msg: String
+    toggle: Boolean
+  },
+  beforeMount() {
+    const cardData = JSON.parse(localStorage.card);
+    this.card = cardData;
+  },
+  methods: {
+    getImgUrl(image) {
+      return image;
+    },
+    removeItem(id) {
+      const items = JSON.parse(localStorage.card);
+      let wasRemoved = false;
+      localStorage.card = JSON.stringify(
+        items.filter(item => {
+          if (item.id === id && !wasRemoved) {
+            wasRemoved = true;
+            return false;
+          } else if (item.id === id && wasRemoved) {
+            return true;
+          }
+          return true;
+        })
+      );
+
+      if (this.renderComponent) {
+        document.querySelector(".card").style.display = "block";
+        this.card = JSON.parse(localStorage.card);
+        this.renderComponent = true;
+      } else {
+        document.querySelector(".card").style.display = "none";
+        this.renderComponent = false;
+        this.$nextTick(() => {
+          // Add the component back in
+          this.renderComponent = true;
+        });
+      }
+    }
+  },
+  watch: {
+    // whenever question changes, this function will run
+    toggle: function(toggle) {
+      if (toggle) {
+        document.querySelector(".card").style.display = "block";
+        this.card = JSON.parse(localStorage.card);
+        this.renderComponent = true;
+      } else {
+        document.querySelector(".card").style.display = "none";
+        this.renderComponent = false;
+        this.$nextTick(() => {
+          // Add the component back in
+          this.renderComponent = true;
+        });
+      }
+    }
   }
 };
 </script>
@@ -41,6 +98,7 @@ export default {
   position: absolute;
   right: 0;
   z-index: 99;
+  display: none;
 }
 .card .items {
   width: 100%;

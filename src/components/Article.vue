@@ -11,6 +11,7 @@
                 <br />
                 <span>
                   <strong>Preço: {{getPrice(book.price)}}</strong>
+                  <i v-on:click.stop.prevent="addCard(book)" class="el-icon-sell"></i>
                 </span>
               </div>
             </el-card>
@@ -47,6 +48,16 @@ export default {
       let pFormated = price.toString().replace(".", ",");
       pFormated = pFormated.indexOf(",") === -1 ? `${pFormated},00` : pFormated;
       return `R$ ${pFormated}`;
+    },
+    addCard(book) {
+      if (window.localStorage.card) {
+        window.localStorage.card = JSON.stringify([
+          book,
+          ...JSON.parse(window.localStorage.card)
+        ]);
+      } else {
+        window.localStorage.card = JSON.stringify([book]);
+      }
     }
   },
   beforeMount() {
@@ -85,6 +96,10 @@ article .button {
 
 .el-card {
   height: 500px;
+}
+
+.el-card .el-icon-sell {
+  font-size: 30px;
 }
 
 .image {

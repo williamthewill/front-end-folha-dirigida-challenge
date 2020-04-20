@@ -3,9 +3,9 @@
     <router-link :to="{ name: 'Article' }">
       <h1>CHALENGE FOLHA DIRIGIDA</h1>
     </router-link>
-    <div class="card-container">
+    <div class="card-container" v-on:click="toggleCard()">
       <i class="el-icon-s-goods card-icon"></i>
-      <card />
+      <card :toggle="cToggle" />
     </div>
   </div>
 </template>
@@ -17,8 +17,16 @@ export default {
   components: {
     Card
   },
-  props: {
-    msg: String
+  data() {
+    return {
+      cToggle: false
+    };
+  },
+  methods: {
+    toggleCard() {
+      this.cToggle = !this.cToggle;
+      return this.cToggle;
+    }
   }
 };
 </script>
@@ -38,17 +46,19 @@ export default {
 }
 .co-header .card-container {
   position: absolute;
-  height: 50px;
-  width: 60px;
+  /* height: 50px;
+  width: 60px; */
+  height: 620px;
+  width: 500px;
   right: 1%;
   top: 10px;
   transition: height 0.15s ease-out;
   overflow: hidden;
 }
 .co-header .card-container:hover {
-  height: 620px;
+  /* height: 620px;
   width: 500px;
-  transition: height 0.25s ease-in;
+  transition: height 0.25s ease-in; */
 }
 .co-header .card-icon {
   font-size: 50px;

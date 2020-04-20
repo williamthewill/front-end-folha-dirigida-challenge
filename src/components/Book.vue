@@ -18,7 +18,7 @@
               <strong>Categorias:</strong>
             </span>
             <br />
-            <div class="categories" v-for="(category, index) in book.categories" :key="index">
+            <div class="categories" v-for="(category) in book.categories" :key="category.name">
               <span>{{category.name}}</span>
             </div>
             <br />
@@ -29,7 +29,7 @@
               <strong>Authores:</strong>
             </span>
             <br />
-            <div class="authors" v-for="(author, index) in book.authors" :key="index">
+            <div class="authors" v-for="(author) in book.authors" :key="author.name">
               <span>{{author.name}}</span>
               <br />
               <span>{{author.description}}</span>
@@ -67,9 +67,12 @@ export default {
       return image;
     },
     getPrice(price) {
-      let pFormated = price.toString().replace(".", ",");
-      pFormated = pFormated.indexOf(",") === -1 ? `${pFormated},00` : pFormated;
-      return `R$ ${pFormated}`;
+      if (price) {
+        let pFormated = price.toString().replace(".", ",");
+        pFormated =
+          pFormated.indexOf(",") === -1 ? `${pFormated},00` : pFormated;
+        return `R$ ${pFormated}`;
+      }
     }
   }
 };
